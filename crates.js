@@ -1,0 +1,1 @@
+window.ALL_CRATES = ["Rusty","itoa","proc_macro2","quote","ryu","serde","serde_derive","serde_json","syn","unicode_xid"];

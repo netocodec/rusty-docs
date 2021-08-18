@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["handle_client","Handle funnction of the client connection."],["is_user_allowed","This will check if the ip client is on the blacklist or the server reaches te maximum client number."],["main",""]],"mod":[["client_mem",""],["configuration",""]]});
