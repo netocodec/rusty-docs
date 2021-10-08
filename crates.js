@@ -1,1 +1,1 @@
-window.ALL_CRATES = ["Rusty","itoa","proc_macro2","quote","ryu","serde","serde_derive","serde_json","syn","unicode_xid"];
+window.ALL_CRATES = ["Rusty","bytes","cfg_if","instant","itoa","libc","lock_api","log","memchr","mio","num_cpus","once_cell","parking_lot","parking_lot_core","pin_project_lite","proc_macro2","quote","ryu","scopeguard","serde","serde_derive","serde_json","signal_hook_registry","smallvec","syn","tokio","tokio_macros","unicode_xid"];

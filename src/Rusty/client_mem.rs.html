@@ -102,9 +102,27 @@
 <span id="100">100</span>
 <span id="101">101</span>
 <span id="102">102</span>
+<span id="103">103</span>
+<span id="104">104</span>
+<span id="105">105</span>
+<span id="106">106</span>
+<span id="107">107</span>
+<span id="108">108</span>
+<span id="109">109</span>
+<span id="110">110</span>
+<span id="111">111</span>
+<span id="112">112</span>
+<span id="113">113</span>
+<span id="114">114</span>
+<span id="115">115</span>
+<span id="116">116</span>
+<span id="117">117</span>
+<span id="118">118</span>
+<span id="119">119</span>
 </pre><pre class="rust">
-<span class="kw">use</span> <span class="ident">std::net</span>::{<span class="ident">TcpStream</span>, <span class="ident">Shutdown</span>};
+<span class="kw">use</span> <span class="ident">std::net</span>::{<span class="ident">TcpStream</span>, <span class="ident">Shutdown</span>, <span class="ident">SocketAddr</span>, <span class="ident">UdpSocket</span>};
 <span class="kw">use</span> <span class="ident">std::io::Write</span>;
+<span class="kw">use</span> <span class="ident">std::ptr</span>;
 
 <span class="doccomment">/// This is the memory sector of the client list.</span>
 <span class="kw">static</span> <span class="kw-2">mut</span> <span class="ident">CLIENT_LIST</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ClientItem</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
@@ -114,7 +132,9 @@
     <span class="doccomment">/// Ip of the client</span>
     <span class="ident">ip</span>: <span class="ident">String</span>,
     <span class="doccomment">/// Client Object</span>
-    <span class="ident">client</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">TcpStream</span>
+    <span class="ident">client</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">TcpStream</span>,
+    <span class="doccomment">/// UDP Client Object</span>
+    <span class="ident">udp_client</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">UdpSocket</span>
 }
 
 
@@ -132,7 +152,16 @@
     <span class="kw">unsafe</span>{
         <span class="kw">let</span> <span class="ident">ip</span> <span class="op">=</span> <span class="ident">get_client_ip</span>(<span class="ident">client</span>);
 
-        <span class="ident">CLIENT_LIST</span>.<span class="ident">insert</span>(<span class="ident">CLIENT_LIST</span>.<span class="ident">len</span>(), <span class="ident">ClientItem</span>{ <span class="ident">ip</span>: <span class="ident">ip</span>, <span class="ident">client</span>: <span class="ident">client</span> });
+        <span class="ident">CLIENT_LIST</span>.<span class="ident">insert</span>(<span class="ident">CLIENT_LIST</span>.<span class="ident">len</span>(), <span class="ident">ClientItem</span>{ <span class="ident">ip</span>: <span class="ident">ip</span>, <span class="ident">client</span>: <span class="ident">client</span>, <span class="ident">udp_client</span>: <span class="ident">ptr::null_mut</span>() });
+    }
+}
+
+<span class="doccomment">/// This will add the udp client into the memory vector</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">add_udp_client</span>(<span class="ident">client</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">UdpSocket</span>, <span class="ident">src</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">SocketAddr</span>){
+    <span class="kw">unsafe</span> {
+        <span class="kw">let</span> <span class="ident">ip</span> <span class="op">=</span> <span class="ident">get_udp_client_ip</span>(<span class="ident">src</span>);
+
+        <span class="ident">CLIENT_LIST</span>.<span class="ident">insert</span>(<span class="ident">CLIENT_LIST</span>.<span class="ident">len</span>(), <span class="ident">ClientItem</span>{ <span class="ident">ip</span>: <span class="ident">ip</span>, <span class="ident">client</span>: <span class="ident">ptr::null_mut</span>(), <span class="ident">udp_client</span>: <span class="ident">client</span> });
     }
 }
 
@@ -162,6 +191,11 @@
 <span class="doccomment">/// Gets the client IP.</span>
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_client_ip</span>(<span class="ident">client</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">TcpStream</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">String</span>{
     <span class="ident">client</span>.<span class="ident">peer_addr</span>().<span class="ident">unwrap</span>().<span class="ident">ip</span>().<span class="ident">to_string</span>()
+}
+
+<span class="doccomment">/// Gets the udp client IP.</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_udp_client_ip</span>(<span class="ident">client</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">SocketAddr</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">String</span>{
+    <span class="ident">client</span>.<span class="ident">ip</span>().<span class="ident">to_string</span>()
 }
 
 
