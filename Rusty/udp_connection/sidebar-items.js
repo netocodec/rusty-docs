@@ -1,1 +1,1 @@
-initSidebarItems({"fn":[["handle_client",""],["start_connection","Starts the connection of the UDP server."]],"mod":[["client_mem",""],["configuration",""]]});
+initSidebarItems({"fn":[["start_connection","Starts the connection of the UDP server."]],"mod":[["client_mem",""],["configuration",""]]});
